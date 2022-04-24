@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     Renderer rendererPlayer;
     public float speed = 10f;
     public float powerUpSpeed = 10.0f;
+    public GameObject powerUpInd;
 
     bool hasPowerUp = false;
 
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
         {
             rendererPlayer.material.color = new Color(1.0f + forwardInput, 1.0f, 1.0f + forwardInput);
         }
+        powerUpInd.transform.position = transform.position;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -43,6 +45,8 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerUp = true;
             Destroy(other.gameObject);
+            StartCoroutine(PowerUpCountdown());
+            powerUpInd.SetActive(true);
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -56,5 +60,12 @@ public class PlayerController : MonoBehaviour
             rbEnemy.AddForce(awayDir * powerUpSpeed, ForceMode.Impulse);
 
         }
+    }
+
+    IEnumerator PowerUpCountdown()
+    {
+        yield return new WaitForSeconds(8);
+        hasPowerUp = false;
+        powerUpInd.SetActive(false);
     }
 }
